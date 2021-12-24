@@ -1,0 +1,13 @@
+  db:
+    container_name: phoenix_db
+    image: postgres
+    volumes:
+      - phoenix-db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: safeuser
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5592:5432"
+    expose: 
+      - 5592
