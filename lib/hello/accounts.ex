@@ -7,6 +7,7 @@ defmodule Hello.Accounts do
   alias Hello.Repo
 
   alias Hello.Accounts.{User, UserToken, UserNotifier}
+  alias Hello.Role
 
   ## Database getters
 
@@ -232,6 +233,10 @@ defmodule Hello.Accounts do
   def get_user_by_session_token(token) do
     {:ok, query} = UserToken.verify_session_token_query(token)
     Repo.one(query)
+  end
+
+  def get_roles_by_user(user) do
+    Role.get_roles_by_user_id(user.id)
   end
 
   @doc """

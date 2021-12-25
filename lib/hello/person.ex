@@ -3,9 +3,8 @@ defmodule Hello.Person do
   import Ecto.Changeset
 
   schema "people" do
-
-    field :user_id, :id
-    field :role_id, :id
+    belongs_to :user, Hello.Accounts.User
+    belongs_to :role, Hello.Role
 
     timestamps()
   end

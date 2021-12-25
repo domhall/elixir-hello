@@ -13,6 +13,10 @@ defmodule HelloWeb.Router do
     plug :fetch_current_user
   end
 
+  pipeline :require_authenticated_admin do
+    plug :require_authenticated_user, [:require_admin]
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -73,7 +77,7 @@ defmodule HelloWeb.Router do
   end
 
   scope "/", HelloWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through [:browser, :require_authenticated_admin]
 
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update

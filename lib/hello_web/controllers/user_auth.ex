@@ -127,10 +127,25 @@ defmodule HelloWeb.UserAuth do
   If you want to enforce the user email is confirmed before
   they use the application at all, here would be a good place.
   """
-  def require_authenticated_user(conn, _opts) do
+  def require_authenticated_user(conn, opts) do
     if conn.assigns[:current_user] do
-      # IO.inspect(conn.assigns[:current_user])
-      conn
+      if :require_admin in opts do
+        is_admin? =
+          Accounts.get_roles_by_user(conn.assigns[:current_user])
+          |> Enum.any?(fn role -> role.name == "admin" end)
+
+        if is_admin? do
+          conn
+        else
+          conn
+          |> put_flash(:error, "You must log in as an administrator to access this page.")
+          |> maybe_store_return_to()
+          |> redirect(to: Routes.user_session_path(conn, :new))
+          |> halt()
+        end
+      else
+        conn
+      end
     else
       conn
       |> put_flash(:error, "You must log in to access this page.")
